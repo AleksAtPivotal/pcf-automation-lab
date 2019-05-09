@@ -40,7 +40,7 @@ resources:
   source:
     uri: ((git_uri))
     branch: ((git_branch))
-   # git_crypt_key: ((git.git_crypt_key))
+    git_crypt_key: ((git.git_crypt_key))
 
 # triggers used to have jobs do something in a timely manner
 - name: one-time-trigger
@@ -68,6 +68,7 @@ jobs:
         params:
           unpack: true
       - get: configuration
+        trigger: true
       - get: opsman-image
     - task: create-vm
       image: platform-automation-image
