@@ -9,7 +9,7 @@ opsman-configuration:
     location: ((azure_location))
     container: ((azure_container))                   # container for opsman image
     network_security_group: ((azure_network_security_group))
-    vpc_subnet: /subscriptions/((azure_resource_group))/resourceGroups/((azure_resource_group))/providers/Microsoft.Network/virtualNetworks/((azure_resource_group))/subnets/((azure_resource_group))
+    vpc_subnet: ((azure_vpc_subnet))
     storage_account: ((azure_storage_account))                   # account name of container
     storage_key: ((azure_storage_key))                  # account key of container (optional)
     ssh_public_key: ((azure_ssh_public_key))  # ssh key to access VM
