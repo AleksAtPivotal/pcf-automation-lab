@@ -1,3 +1,8 @@
 foundation: azure_alekssaul_com
 git_uri: https://github.com/alekssaul/pcf-automation-lab.git
 git_branch: pks-azure
+
+github:
+  user:
+    email: asaul@pivotal.io 
+    username: alekssaul

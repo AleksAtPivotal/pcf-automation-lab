@@ -88,10 +88,10 @@ jobs:
             image: platform-automation-image
             file: platform-automation-tasks/tasks/make-git-commit.yml
             input_mapping:
-              repository: pcf-automation
+              repository: configuration
               file-source: generated-state
             output_mapping:
-              repository-commit: pcf-automation-commit
+              repository-commit: configuration-commit
             params:
               FILE_SOURCE_PATH: state.yml
               FILE_DESTINATION_PATH: foundations/((foundation))/state/state.yml
@@ -100,17 +100,17 @@ jobs:
               COMMIT_MESSAGE: "Add or update state file: state.yml"
           - put: configuration
             params:
-              repository: pcf-automation-commit
+              repository: configuration-commit
               merge: true
     - task: configure-authentication
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-authentication.yml
       attempts: 10
       input_mapping:
-        env: pcf-automation
-        config: pcf-automation
+        env: configuration
+        config: configuration
       params:
-        ENV_FILE: ((foundation))/env/env.yml
+        ENV_FILE: ((foundation))/env/auth.yml
         AUTH_CONFIG_FILE: ((foundation))/config/auth.yml
     - task: configure-director
       image: platform-automation-image
