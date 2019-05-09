@@ -1,7 +1,7 @@
 groups:
 - name: full-pcf
   jobs:
-  - install-opsman
+  - deploy-opsman
 
 resource_types:
 - name: azure-blobstore
@@ -54,7 +54,7 @@ resources:
 #     interval: 24h
 
 jobs:      
-- name: install-opsman
+- name: deploy-opsman
   serial: true
   serial_groups: [ install ]
   plan:
