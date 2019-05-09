@@ -1,0 +1,142 @@
+## Pipeline Downloads the Assets from Pivnet
+groups:
+- name: sync-assets
+  jobs:
+  - stemcells-xenial
+  - ops-manager
+  - pas
+  - platform-automation-image
+  - platform-automation-tasks
+
+
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tag: latest-final
+
+- name: azure-blobstore
+  type: docker-image
+  source:
+    repository: pcfabr/azure-blobstore-resource
+
+resources:
+## Sync Xenial Stemcells
+- name: stemcells-xenial-pivnet
+  type: pivnet
+  source:
+    api_token: {{pivnet_token}}
+    product_slug: stemcells-ubuntu-xenial
+    product_version: ((products.stemcell_xenial_version)).*
+    sort_by: semver
+- name: stemcells-xenial-azure-storage
+  type: azure-blobstore
+  source:
+    storage_account_name: ((storage.accountname))
+    storage_account_key: ((storage.accountkey)) 
+    container: "stemcells"
+    regexp: bosh-stemcell-(.*)-.*.tgz
+
+- name: ops-manager-pivnet
+  type: pivnet
+  source:
+    api_token: {{pivnet_token}}
+    product_slug: ops-manager
+    product_version: ((products.opsman_major_minor_version)).*
+    sort_by: semver
+- name: opsmanager-azure-storage
+  type: azure-blobstore
+  source:
+    storage_account_name: ((storage.accountname))
+    storage_account_key: ((storage.accountkey)) 
+    container: "opsmgr"
+    regexp: ops-manager-azure-(.*)-.*.yml
+
+- name: pas-pivnet
+  type: pivnet
+  source:
+    api_token: {{pivnet_token}}
+    product_slug: elastic-runtime
+    product_version: ((products.opsman_major_minor_version)).*
+    sort_by: semver
+- name: pas-azure-storage
+  type: azure-blobstore
+  source:
+    storage_account_name: ((storage.accountname))
+    storage_account_key: ((storage.accountkey)) 
+    container: "pas"
+    regexp: cf-(.*)-.*.pivotal
+
+- name: platform-automation-pivnet
+  type: pivnet
+  source:
+    api_token: {{pivnet_token}}
+    product_slug: platform-automation
+    product_version: ((products.platform_automation_version)).*
+    sort_by: semver
+- name: platform-automation-image-azure-storage
+  type: azure-blobstore
+  source:
+    storage_account_name: ((storage.accountname))
+    storage_account_key: ((storage.accountkey)) 
+    container: "platform-automation"
+    regexp: platform-automation-image-(.*)-.*..tgz
+- name: platform-automation-tasks-azure-storage
+  type: azure-blobstore
+  source:
+    storage_account_name: ((storage.accountname))
+    storage_account_key: ((storage.accountkey)) 
+    container: "platform-automation"
+    regexp: platform-automation-tasks-(.*)-.*..zip
+
+jobs:
+- name: stemcells-xenial
+  plan:
+  - get: stemcells-xenial-pivnet
+    trigger: true
+    params:
+      globs: ["*azure-hyperv*"]
+  - put: stemcells-xenial-azure-storage
+    params:
+      file: "stemcells-xenial-pivnet/*.tgz"
+
+- name: ops-manager
+  plan:
+  - get: ops-manager-pivnet
+    trigger: true
+    params:
+      globs: ["ops-manager-azure-*.yml"]
+  - put: opsmanager-azure-storage
+    params:
+      file: "ops-manager-pivnet/*.yml"
+
+- name: pas
+  plan:
+  - get: pas-pivnet
+    trigger: true
+    params:
+      globs: ["cf-*.pivotal"]
+  - put: pas-azure-storage
+    params:
+      file: "pas-pivnet/*.pivotal"
+
+- name: platform-automation-image
+  plan:
+  - get: platform-automation-pivnet
+    trigger: true
+    params:
+      globs: ["platform-automation-image-*.tgz"]
+  - put: platform-automation-image-azure-storage
+    params:
+      file: "platform-automation-pivnet/platform-automation-image-*.tgz"
+
+- name: platform-automation-tasks
+  plan:
+  - get: platform-automation-pivnet
+    trigger: true
+    params:
+      globs: ["platform-automation-tasks-*.zip"]
+  - put: platform-automation-tasks-azure-storage
+    params:
+      file: "platform-automation-pivnet/platform-automation-tasks-*.zip"

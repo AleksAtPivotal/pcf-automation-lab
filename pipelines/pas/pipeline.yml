@@ -1,0 +1,164 @@
+groups:
+- name: full-pcf
+  jobs:
+  - install-opsman
+
+resource_types:
+- name: azure-blobstore
+  type: docker-image
+  source:
+    repository: pcfabr/azure-blobstore-resource
+
+resources:
+- name: platform-automation-tasks
+  type: azure-blobstore
+  source:
+    storage_account_name: ((storage.accountname))
+    storage_account_key: ((storage.accountkey)) 
+    container: "platform-automation"
+    regexp: platform-automation-tasks-(.*).zip
+
+- name: platform-automation-image
+  type: azure-blobstore
+  source:
+    storage_account_name: ((storage.accountname))
+    storage_account_key: ((storage.accountkey)) 
+    container: "platform-automation"
+    regexp: platform-automation-image-(.*).tgz
+    
+- name: opsman-image
+  type: azure-blobstore
+  source:
+    storage_account_name: ((storage.accountname))
+    storage_account_key: ((storage.accountkey)) 
+    container: "opsmgr"
+    regexp: ops-manager-azure-(.*).yml
+      
+# configurations
+- name: configuration
+  type: git
+  source:
+    uri: ((git.uri))
+    branch: ((git.branch))
+    
+
+- name: credentials
+  type: git
+  source:
+    uri: ((git-secrets.uri))
+    branch: ((git-secrets.branch))
+    private_key: ((git-secrets.private_key))
+
+# triggers used to have jobs do something in a timely manner
+- name: one-time-trigger
+  type: time
+  source:
+    interval: 999999h
+
+# - name: daily-trigger
+#   type: time
+#   source:
+#     interval: 24h
+
+configuration-interpolate: &configuration-interpolate
+  image: platform-automation-image
+  file: configuration/tasks/params-interpolate.yml
+  input_mapping:
+    config: configuration
+    vars: credentials
+  params:
+    CONFIG_FILE: config/foundations/((foundation))/env/ops-manager.yml
+  output_mapping:
+    interpolated-files: configuration
+
+# credentials-interpolate: &credentials-interpolate
+#   image: platform-automation-image
+#   file: configuration/tasks/params-interpolate.yml
+#   input_mapping:
+#     config: configuration
+#     vars: credentials
+#   params:
+#     VARS_FILES: vars/foundations/((foundation))/ops-manager.yml
+#     CONFIG_FILE: config/foundations/((foundation))/env/ops-manager.yml
+#   output_mapping:
+#     interpolated-files: configuration
+
+jobs:      
+- name: install-opsman
+  serial: true
+  serial_groups: [ install ]
+  plan:
+    - aggregate:
+      - get: platform-automation-image
+        params:
+          unpack: true
+      - get: one-time-trigger
+        trigger: true
+      - get: platform-automation-tasks
+        params:
+          unpack: true
+      - get: configuration
+      - get: credentials
+      - get: opsman-image
+    - task: configuration-interpolate
+      <<: *configuration-interpolate
+    - task: create-vm
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/create-vm.yml
+      input_mapping:
+        image: opsman-image
+        state: configuration
+        config: configuration
+        vars: configuration
+      params:
+        VARS_FILES: vars/foundations/((foundation))/vars/ops-manager.yml
+        STATE_FILE: foundations/((foundation))/state/state.yml
+        OPSMAN_CONFIG_FILE: foundations/((foundation))/products/ops-manager/ops-manager.yml
+      on_success: &make-state-commit
+        do:
+          - task: make-commit
+            image: platform-automation-image
+            file: platform-automation-tasks/tasks/make-git-commit.yml
+            input_mapping:
+              repository: pcf-automation
+              file-source: generated-state
+            output_mapping:
+              repository-commit: pcf-automation-commit
+            params:
+              FILE_SOURCE_PATH: state.yml
+              FILE_DESTINATION_PATH: foundations/((foundation))/state/state.yml
+              GIT_AUTHOR_EMAIL: ((github.user.email))
+              GIT_AUTHOR_NAME: ((github.user.username))
+              COMMIT_MESSAGE: "Add or update state file: state.yml"
+          - put: configuration
+            params:
+              repository: pcf-automation-commit
+              merge: true
+    - task: configure-authentication
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-authentication.yml
+      attempts: 10
+      input_mapping:
+        env: pcf-automation
+        config: pcf-automation
+      params:
+        ENV_FILE: ((foundation))/env/env.yml
+        AUTH_CONFIG_FILE: ((foundation))/config/auth.yml
+    - task: configure-director
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/configure-director.yml
+      input_mapping:
+        config: pcf-automation
+        env: pcf-automation
+        vars: interpolated-files
+      params:
+        VARS_FILES: vars/((foundation))/vars/director-vars.yml
+        ENV_FILE: ((foundation))/env/env.yml
+        DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
+    - task: apply-director-changes
+      image: platform-automation-image
+      file: platform-automation-tasks/tasks/apply-director-changes.yml
+      input_mapping:
+        env: pcf-automation
+      params:
+        ENV_FILE: ((foundation))/env/env.yml

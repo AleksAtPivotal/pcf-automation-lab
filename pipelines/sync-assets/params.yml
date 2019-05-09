@@ -1,0 +1,6 @@
+products:
+  stemcell_xenial_version: 97
+  ## todo; dynamically parse the URL from YAML file instead of hardcoding the bucket URL
+  opsman_azure_url: https://opsmanagereastus.blob.core.windows.net/images/ops-manager-2.4-build.177.vhd
+  opsman_major_minor_version: "2.5"
+  platform_automation_version: "2.2"

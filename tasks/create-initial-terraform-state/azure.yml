@@ -1,0 +1,58 @@
+# The inputs, outputs, params, filename, and filepath
+# of this task file are part of its semantically versioned API.
+# See our documentation for a detailed discussion of our semver API.
+# See www.semver.org for an explanation of semantic versioning.
+
+# code_snippet download-product start yaml
+---
+platform: linux
+
+inputs:
+- name: config # contains download-file config file
+- name: vars # variable files to be made available
+  optional: true
+- name: secrets
+  # secret files to be made available
+  # separate from vars, so they can be store securely
+  optional: true
+
+image_resource:
+  type: docker-image
+  source:
+    repository: pcfnorm/rootfs
+
+params:
+  AZURE_STORAGE_ACCOUNT: 
+  AZURE_STORAGE_KEY:
+  CONTAINER:
+  foundation:
+
+run:
+  path: bash
+  args:
+  - "-c"
+  - |
+    blobs=$(az storage blob list -c ${CONTAINER})
+    files=$(echo "$blobs" | jq -r .[].name)
+
+    set +e
+    echo ${files} | grep ${foundation}/terraform.tfstate
+    if [ "$?" -gt "0" ]; then
+    echo "{\"version\": 3}" > terraform.tfstate
+    az storage blob upload -c ${CONTAINER} -n ${foundation}/terraform.tfstate -f terraform.tfstate
+    set +x
+    if [ "$?" -gt "0" ]; then
+        echo "Failed to upload empty tfstate file"
+        exit 1
+    fi
+    set -x
+    az storage blob snapshot -c ${CONTAINER} -n terraform.tfstate
+    set +x
+    if [ "$?" -gt "0" ]; then
+        echo "Failed to create snapshot of tfstate file"
+        exit 1
+    fi
+    else
+    echo "terraform.tfstate file found, skipping"
+    exit 0
+    fi
