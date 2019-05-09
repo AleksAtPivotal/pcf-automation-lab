@@ -121,7 +121,7 @@ jobs:
         vars: interpolated-files
       params:
         VARS_FILES: vars/((foundation))/vars/director-vars.yml
-        ENV_FILE: ((foundation))/env/env.yml
+        ENV_FILE: ((foundation))/env/auth.yml
         DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
     - task: apply-director-changes
       image: platform-automation-image
@@ -129,4 +129,4 @@ jobs:
       input_mapping:
         env: pcf-automation
       params:
-        ENV_FILE: ((foundation))/env/env.yml
+        ENV_FILE: ((foundation))/env/auth.yml
