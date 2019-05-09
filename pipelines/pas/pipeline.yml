@@ -60,28 +60,28 @@ resources:
 #   source:
 #     interval: 24h
 
-configuration-interpolate: &configuration-interpolate
+# configuration-interpolate: &configuration-interpolate
+#   image: platform-automation-image
+#   file: configuration/tasks/vars-interpolate.yml
+#   input_mapping:
+#     config: configuration
+#     vars: credentials
+#   params:
+#     CONFIG_FILE: foundations/((foundation))/env/ops-manager.yml
+#   output_mapping:
+#     interpolated-files: configuration
+
+credentials-interpolate: &credentials-interpolate
   image: platform-automation-image
   file: configuration/tasks/params-interpolate.yml
   input_mapping:
     config: configuration
     vars: credentials
   params:
+    VARS_FILES: vars/foundations/((foundation))/ops-manager.yml
     CONFIG_FILE: config/foundations/((foundation))/env/ops-manager.yml
   output_mapping:
     interpolated-files: configuration
-
-# credentials-interpolate: &credentials-interpolate
-#   image: platform-automation-image
-#   file: configuration/tasks/params-interpolate.yml
-#   input_mapping:
-#     config: configuration
-#     vars: credentials
-#   params:
-#     VARS_FILES: vars/foundations/((foundation))/ops-manager.yml
-#     CONFIG_FILE: config/foundations/((foundation))/env/ops-manager.yml
-#   output_mapping:
-#     interpolated-files: configuration
 
 jobs:      
 - name: install-opsman
@@ -100,8 +100,8 @@ jobs:
       - get: configuration
       - get: credentials
       - get: opsman-image
-    - task: configuration-interpolate
-      <<: *configuration-interpolate
+    - task: credentials-interpolate
+      <<: *credentials-interpolate
     - task: create-vm
       image: platform-automation-image
       file: platform-automation-tasks/tasks/create-vm.yml
