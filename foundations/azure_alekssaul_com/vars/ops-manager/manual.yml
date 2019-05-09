@@ -1,0 +1,12 @@
+resource_group: alekssaul-pcf
+location: "East US"
+container: opsmanagerimage
+network_security_group: ops-manager-security-group
+vpc_subnet: /subscriptions/((azure_resource_group))/resourceGroups/((azure_resource_group))/providers/Microsoft.Network/virtualNetworks/((azure_resource_group))/subnets/((azure_resource_group))
+storage_account: alekssaulpinfra   # account name of container
+ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxtJE60PCpsobqdRY/dnR3+AobBPyp9fGCzyLOi57r893KyaU51EKZaPMfifohX2EtJU1mMkfzitL2PfFVfOURy+lO6oIq+TAH7nS4/poMFTXjaBtmSB4gtzxOKIZO7MzzN+oZbAfZlU41R9AVE4sTdlVkN1crWuu5kRoBoz627DCaZFsZbixvQ5EmHhAlmVQdG8i3/jLoEXo/fRAj6BfoHf2rCmoydg9TbGflqEhPyaBBIA2+9BdTDoniKn417HF5WdWOpenHeMLohB4VrYcFSWksRiPo7z9+XXzQfuXk86IiMNw/dFaNlveGg0QwKaRM9JOu8KqQ/CdZ0kREqziL
+vm_name: OpsManager-vm
+boot_disk_size: 200
+cloud_name: AzureCloud
+public_ip: ""
+private_ip: "192.168.0.4"

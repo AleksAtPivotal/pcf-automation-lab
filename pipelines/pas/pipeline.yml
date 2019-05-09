@@ -38,16 +38,9 @@ resources:
 - name: configuration
   type: git
   source:
-    uri: ((git.uri))
-    branch: ((git.branch))
-    
-
-- name: credentials
-  type: git
-  source:
-    uri: ((git-secrets.uri))
-    branch: ((git-secrets.branch))
-    private_key: ((git-secrets.private_key))
+    uri: ((git_uri))
+    branch: ((git_branch))
+   # git_crypt_key: ((git.git_crypt_key))
 
 # triggers used to have jobs do something in a timely manner
 - name: one-time-trigger
@@ -59,29 +52,6 @@ resources:
 #   type: time
 #   source:
 #     interval: 24h
-
-# configuration-interpolate: &configuration-interpolate
-#   image: platform-automation-image
-#   file: configuration/tasks/vars-interpolate.yml
-#   input_mapping:
-#     config: configuration
-#     vars: credentials
-#   params:
-#     CONFIG_FILE: foundations/((foundation))/env/ops-manager.yml
-#   output_mapping:
-#     interpolated-files: configuration
-
-credentials-interpolate: &credentials-interpolate
-  image: platform-automation-image
-  file: configuration/tasks/vars-interpolate.yml
-  input_mapping:
-    config: configuration
-    vars: credentials
-  params:
-    VARS_FILES: vars/foundations/((foundation))/ops-manager.yml
-    CONFIG_FILE: foundations/((foundation))/config/auth.yml
-  output_mapping:
-    interpolated-files: configuration
 
 jobs:      
 - name: install-opsman
@@ -98,10 +68,7 @@ jobs:
         params:
           unpack: true
       - get: configuration
-      - get: credentials
       - get: opsman-image
-    - task: credentials-interpolate
-      <<: *credentials-interpolate
     - task: create-vm
       image: platform-automation-image
       file: platform-automation-tasks/tasks/create-vm.yml
@@ -111,9 +78,9 @@ jobs:
         config: configuration
         vars: configuration
       params:
-        VARS_FILES: vars/foundations/((foundation))/env/ops-manager.yml
+        VARS_FILES: vars/foundations/((foundation))/vars/ops-manager/manual.yml vars/foundations/((foundation))/vars/ops-manager/secrets.yml
         STATE_FILE: state/foundations/((foundation))/state/state.yml
-        OPSMAN_CONFIG_FILE: foundations/((foundation))/env/ops-manager.yml
+        OPSMAN_CONFIG_FILE: foundations/((foundation))/config/ops-manager.yml
       on_success: &make-state-commit
         do:
           - task: make-commit
