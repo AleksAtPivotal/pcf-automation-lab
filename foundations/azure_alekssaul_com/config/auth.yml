@@ -2,7 +2,7 @@
 
 # basic authentication
 
-username: admin
+username: ((opsman_username))
 password: ((opsman_password))
 
 # decryption-passphrase is optional,

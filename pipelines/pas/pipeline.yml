@@ -73,13 +73,13 @@ resources:
 
 credentials-interpolate: &credentials-interpolate
   image: platform-automation-image
-  file: configuration/tasks/params-interpolate.yml
+  file: configuration/tasks/vars-interpolate.yml
   input_mapping:
     config: configuration
     vars: credentials
   params:
     VARS_FILES: vars/foundations/((foundation))/ops-manager.yml
-    CONFIG_FILE: config/foundations/((foundation))/env/ops-manager.yml
+    CONFIG_FILE: foundations/((foundation))/config/auth.yml
   output_mapping:
     interpolated-files: configuration
 
@@ -111,9 +111,9 @@ jobs:
         config: configuration
         vars: configuration
       params:
-        VARS_FILES: vars/foundations/((foundation))/vars/ops-manager.yml
-        STATE_FILE: foundations/((foundation))/state/state.yml
-        OPSMAN_CONFIG_FILE: foundations/((foundation))/products/ops-manager/ops-manager.yml
+        VARS_FILES: vars/foundations/((foundation))/env/ops-manager.yml
+        STATE_FILE: state/foundations/((foundation))/state/state.yml
+        OPSMAN_CONFIG_FILE: foundations/((foundation))/env/ops-manager.yml
       on_success: &make-state-commit
         do:
           - task: make-commit
