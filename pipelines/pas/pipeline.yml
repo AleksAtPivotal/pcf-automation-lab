@@ -69,7 +69,6 @@ jobs:
         params:
           unpack: true
       - get: configuration
-        trigger: true
       - get: opsman-image
     - task: create-vm
       image: platform-automation-image
@@ -103,16 +102,32 @@ jobs:
             params:
               repository: configuration-commit
               merge: true
+    - task: int-auth
+      image: platform-automation-image
+      config:
+        platform: linux
+        inputs:
+          - name: configuration
+        outputs:
+          - name: auth-output
+        run:
+          path: bash
+          args:
+            - -c
+            - |
+              set -eu
+              om interpolate --config configuration/foundations/((foundation))/env/env.yml -l configuration/foundations/((foundation))/vars/auth/secrets.yml > auth-output/env.yml
+              om interpolate --config configuration/foundations/((foundation))/config/auth.yml -l configuration/foundations/((foundation))/vars/auth/secrets.yml > auth-output/auth.yml
     - task: configure-authentication
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-authentication.yml
       attempts: 10
       input_mapping:
-        env: configuration
-        config: configuration
+        env: auth-output
+        config: auth-output
       params:
-        ENV_FILE: ((foundation))/env/auth.yml
-        AUTH_CONFIG_FILE: ((foundation))/config/auth.yml
+        ENV_FILE: env.yml
+        AUTH_CONFIG_FILE: auth.yml
     - task: configure-director
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-director.yml
@@ -122,7 +137,7 @@ jobs:
         vars: interpolated-files
       params:
         VARS_FILES: vars/((foundation))/vars/director-vars.yml
-        ENV_FILE: ((foundation))/env/auth.yml
+        ENV_FILE: ((foundation))/env/env.yml
         DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
     - task: apply-director-changes
       image: platform-automation-image
@@ -130,4 +145,4 @@ jobs:
       input_mapping:
         env: pcf-automation
       params:
-        ENV_FILE: ((foundation))/env/auth.yml
+        ENV_FILE: ((foundation))/env/env.yml
