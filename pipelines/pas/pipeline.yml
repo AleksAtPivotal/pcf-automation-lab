@@ -41,6 +41,7 @@ resources:
     uri: ((git_uri))
     branch: ((git_branch))
     git_crypt_key: ((git.git_crypt_key))
+    private_key: ((git.private_key))
 
 # triggers used to have jobs do something in a timely manner
 - name: one-time-trigger
