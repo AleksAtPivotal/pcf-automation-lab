@@ -1,3 +1,10 @@
+az-configuration:
+- name: zone-1
+  iaas_configuration_guid: ((director_az1_))
+- name: zone-2
+  iaas_configuration_guid: e8b37c715a56ac117f34
+- name: zone-3
+  iaas_configuration_guid: e8b37c715a56ac117f34
 network-assignment:
   network:
     name: infrastructure
@@ -7,7 +14,7 @@ networks-configuration:
   networks:
   - name: infrastructure
     subnets:
-    - iaas_identifier: alekssaul-pcf-virtual-network/alekssaul-pcf-opsman-and-director-subnet
+    - iaas_identifier: azure_alekssaul_com-virtual-network/azure_alekssaul_com-infrastructure-subnet
       cidr: 10.0.8.0/26
       dns: 168.63.129.16,8.8.8.8
       gateway: 10.0.8.1
@@ -16,7 +23,7 @@ networks-configuration:
       - "null"
   - name: pas
     subnets:
-    - iaas_identifier: alekssaul-pcf-virtual-network/alekssaul-pcf-ert-subnet
+    - iaas_identifier: azure_alekssaul_com-virtual-network/azure_alekssaul_com-pas-subnet
       cidr: 10.0.0.0/22
       dns: 168.63.129.16,8.8.8.8
       gateway: 10.0.0.1
@@ -25,10 +32,10 @@ networks-configuration:
       - "null"
   - name: services
     subnets:
-    - iaas_identifier: alekssaul-pcf-virtual-network/alekssaul-pcf-services-01-subnet
+    - iaas_identifier: azure_alekssaul_com-virtual-network/azure_alekssaul_com-services-subnet
       cidr: 10.0.4.0/22
       dns: 168.63.129.16,8.8.8.8
-      gateway: 192.168.8.1
+      gateway: 10.0.4.1
       reserved_ip_ranges: 10.0.4.1-10.0.4.9
       availability_zone_names:
       - "null"
@@ -52,7 +59,7 @@ properties-configuration:
     local_blobstore_options:
       tls_enabled: true
     ntp_servers_string: time.google.com
-    post_deploy_enabled: false
+    post_deploy_enabled: true
     resurrector_enabled: true
     retry_bosh_deploys: true
     skip_director_drain: true
