@@ -1,4 +1,4 @@
-azure_resource_group: alekssaul-pcf
+azure_resource_group: azure_alekssaul_com
 azure_location: "East US"
 azure_container: opsmanagerimage
 azure_network_security_group: azure_alekssaul_com-ops-manager-security-group
