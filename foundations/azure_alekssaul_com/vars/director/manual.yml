@@ -1,6 +1,7 @@
 director_az1_guid: e8b37c715a56ac117f34
 director_az2_guid: e8b37c715a56ac117f34
 director_az3_guid: e8b37c715a56ac117f34
+director_vnet: azure_alekssaul_com-virtual-network
 
 director_trusted_certificates: | 
   -----BEGIN CERTIFICATE-----
@@ -31,3 +32,5 @@ director_trusted_certificates: |
   RkTRfCaw7ZPKmF+6ydCKQOTi2G5pLCU3oZ6XyNn3ivsQkXusDMcgNtMYxzL3e92V
   bJhAiy9/swqM1XvZAt2CIE4brtYZ
   -----END CERTIFICATE-----
+
+properties-configuration_iaas_configuration_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxtJE60PCpsobqdRY/dnR3+AobBPyp9fGCzyLOi57r893KyaU51EKZaPMfifohX2EtJU1mMkfzitL2PfFVfOURy+lO6oIq+TAH7nS4/poMFTXjaBtmSB4gtzxOKIZO7MzzN+oZbAfZlU41R9AVE4sTdlVkN1crWuu5kRoBoz627DCaZFsZbixvQ5EmHhAlmVQdG8i3/jLoEXo/fRAj6BfoHf2rCmoydg9TbGflqEhPyaBBIA2+9BdTDoniKn417HF5WdWOpenHeMLohB4VrYcFSWksRiPo7z9+XXzQfuXk86IiMNw/dFaNlveGg0QwKaRM9JOu8KqQ/CdZ0kREqziL
