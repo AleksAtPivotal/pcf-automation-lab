@@ -1,10 +1,10 @@
 az-configuration:
 - name: zone-1
-  iaas_configuration_guid: ((director_az1_))
+  iaas_configuration_guid: ((director_az1_guid))
 - name: zone-2
-  iaas_configuration_guid: e8b37c715a56ac117f34
+  iaas_configuration_guid: ((director_az2_guid))
 - name: zone-3
-  iaas_configuration_guid: e8b37c715a56ac117f34
+  iaas_configuration_guid: ((director_az3_guid))
 network-assignment:
   network:
     name: infrastructure
