@@ -1,10 +1,3 @@
-az-configuration:
-- name: zone-1
-  iaas_configuration_guid: ((director_az1_guid))
-- name: zone-2
-  iaas_configuration_guid: ((director_az2_guid))
-- name: zone-3
-  iaas_configuration_guid: ((director_az3_guid))
 network-assignment:
   network:
     name: infrastructure
@@ -16,7 +9,7 @@ networks-configuration:
   networks:
   - name: infrastructure
     subnets:
-    - iaas_identifier: ((director_vnet)))/azure_alekssaul_com-infrastructure-subnet
+    - iaas_identifier: ((director_vnet))/azure_alekssaul_com-infrastructure-subnet
       cidr: 10.0.8.0/26
       reserved_ip_ranges: 10.0.8.1-10.0.8.9
       dns: 168.63.129.16,8.8.8.8
@@ -27,7 +20,7 @@ networks-configuration:
       - zone-3
   - name: pas
     subnets:
-    - iaas_identifier: ((director_vnet)))/azure_alekssaul_com-pas-subnet
+    - iaas_identifier: ((director_vnet))/azure_alekssaul_com-pas-subnet
       cidr: 10.0.0.0/22
       reserved_ip_ranges: 10.0.0.1-10.0.0.9
       dns: 168.63.129.16,8.8.8.8
@@ -38,7 +31,7 @@ networks-configuration:
       - zone-3
   - name: services
     subnets:
-    - iaas_identifier: ((director_vnet)))/azure_alekssaul_com-services-subnet
+    - iaas_identifier: ((director_vnet))/azure_alekssaul_com-services-subnet
       cidr: 10.0.4.0/22
       reserved_ip_ranges: 10.0.4.1-10.0.4.9
       dns: 168.63.129.16,8.8.8.8
@@ -91,8 +84,8 @@ properties-configuration:
     ssh_private_key: ((properties-configuration_iaas_configuration_ssh_private_key))
     ssh_public_key: ((properties-configuration_iaas_configuration_ssh_public_key))
     storage_account_type: ((properties-configuration_iaas_configuration_storage_account_type))
-    subscription_id: ((properties-configuration_iaas_configuration_subscription_id))
-    tenant_id: ((properties-configuration_iaas_configuration_tenant_id))
+    subscription_id: ((azure_subscription_id))
+    tenant_id: ((azure_tenant_id))
   security_configuration:
     generate_vm_passwords: true
     opsmanager_root_ca_trusted_certs: true

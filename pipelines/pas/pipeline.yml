@@ -70,38 +70,38 @@ jobs:
           unpack: true
       - get: configuration
       - get: opsman-image
-    - task: create-vm
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/create-vm.yml
-      input_mapping:
-        image: opsman-image
-        state: configuration
-        config: configuration
-        vars: configuration
-      params:
-        VARS_FILES: vars/foundations/((foundation))/vars/common.yml vars/foundations/((foundation))/vars/secrets.yml vars/foundations/((foundation))/vars/ops-manager/manual.yml vars/foundations/((foundation))/vars/ops-manager/secrets.yml
-        STATE_FILE: state/foundations/((foundation))/state/state.yml
-        OPSMAN_CONFIG_FILE: foundations/((foundation))/config/ops-manager.yml
-      on_success: &make-state-commit
-        do:
-          - task: make-commit
-            image: platform-automation-image
-            file: platform-automation-tasks/tasks/make-git-commit.yml
-            input_mapping:
-              repository: configuration
-              file-source: generated-state
-            output_mapping:
-              repository-commit: configuration-commit
-            params:
-              FILE_SOURCE_PATH: state.yml
-              FILE_DESTINATION_PATH: foundations/((foundation))/state/state.yml
-              GIT_AUTHOR_EMAIL: ((github.user.email))
-              GIT_AUTHOR_NAME: ((github.user.username))
-              COMMIT_MESSAGE: "Add or update state file: state.yml"
-          - put: configuration
-            params:
-              repository: configuration-commit
-              merge: true
+    # - task: create-vm
+    #   image: platform-automation-image
+    #   file: platform-automation-tasks/tasks/create-vm.yml
+    #   input_mapping:
+    #     image: opsman-image
+    #     state: configuration
+    #     config: configuration
+    #     vars: configuration
+    #   params:
+    #     VARS_FILES: vars/foundations/((foundation))/vars/common.yml vars/foundations/((foundation))/vars/secrets.yml vars/foundations/((foundation))/vars/ops-manager/manual.yml vars/foundations/((foundation))/vars/ops-manager/secrets.yml
+    #     STATE_FILE: state/foundations/((foundation))/state/state.yml
+    #     OPSMAN_CONFIG_FILE: foundations/((foundation))/config/ops-manager.yml
+    #   on_success: &make-state-commit
+    #     do:
+    #       - task: make-commit
+    #         image: platform-automation-image
+    #         file: platform-automation-tasks/tasks/make-git-commit.yml
+    #         input_mapping:
+    #           repository: configuration
+    #           file-source: generated-state
+    #         output_mapping:
+    #           repository-commit: configuration-commit
+    #         params:
+    #           FILE_SOURCE_PATH: state.yml
+    #           FILE_DESTINATION_PATH: foundations/((foundation))/state/state.yml
+    #           GIT_AUTHOR_EMAIL: ((github.user.email))
+    #           GIT_AUTHOR_NAME: ((github.user.username))
+    #           COMMIT_MESSAGE: "Add or update state file: state.yml"
+    #       - put: configuration
+    #         params:
+    #           repository: configuration-commit
+    #           merge: true
     - task: int-auth
       image: platform-automation-image
       config:
@@ -118,16 +118,16 @@ jobs:
               set -eu
               om interpolate --config configuration/foundations/((foundation))/env/env.yml -l configuration/foundations/((foundation))/vars/auth/secrets.yml > auth-output/env.yml
               om interpolate --config configuration/foundations/((foundation))/config/auth.yml -l configuration/foundations/((foundation))/vars/auth/secrets.yml > auth-output/auth.yml
-    - task: configure-authentication
-      image: platform-automation-image
-      file: platform-automation-tasks/tasks/configure-authentication.yml
-      attempts: 10
-      input_mapping:
-        env: auth-output
-        config: auth-output
-      params:
-        ENV_FILE: env.yml
-        AUTH_CONFIG_FILE: auth.yml
+    # - task: configure-authentication
+    #   image: platform-automation-image
+    #   file: platform-automation-tasks/tasks/configure-authentication.yml
+    #   attempts: 10
+    #   input_mapping:
+    #     env: auth-output
+    #     config: auth-output
+    #   params:
+    #     ENV_FILE: env.yml
+    #     AUTH_CONFIG_FILE: auth.yml
     - task: configure-director
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-director.yml
