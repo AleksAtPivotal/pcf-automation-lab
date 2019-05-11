@@ -78,8 +78,8 @@ properties-configuration:
     additional_cloud_properties: {}
     availability_mode: "availability_zones"
     bosh_storage_account_name: ((properties-configuration_iaas_configuration_bosh_storage_account_name))
-    client_id: ((properties-configuration_iaas_configuration_client_id))
-    client_secret: ((properties-configuration_iaas_configuration_client_secret))
+    client_id: ((azure_client_id))
+    client_secret: ((azure_client_secret))
     cloud_storage_type: ((properties-configuration_iaas_configuration_cloud_storage_type))
     default_security_group: ((properties-configuration_iaas_configuration_default_security_group))
     deployed_cloud_storage_type: ((properties-configuration_iaas_configuration_deployed_cloud_storage_type))
@@ -87,7 +87,7 @@ properties-configuration:
     environment: "AzureCloud"
     guid: ((properties-configuration_iaas_configuration_guid))
     name: default
-    resource_group_name: ((properties-configuration_iaas_configuration_resource_group_name))
+    resource_group_name: ((azure_resource_group))
     ssh_private_key: ((properties-configuration_iaas_configuration_ssh_private_key))
     ssh_public_key: ((properties-configuration_iaas_configuration_ssh_public_key))
     storage_account_type: ((properties-configuration_iaas_configuration_storage_account_type))
