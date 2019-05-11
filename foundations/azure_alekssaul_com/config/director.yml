@@ -8,37 +8,28 @@ networks-configuration:
   - name: infrastructure
     subnets:
     - iaas_identifier: alekssaul-pcf-virtual-network/alekssaul-pcf-opsman-and-director-subnet
-      cidr: 192.168.0.0/26
+      cidr: 10.0.8.0/26
       dns: 168.63.129.16,8.8.8.8
-      gateway: 192.168.0.1
-      reserved_ip_ranges: 192.168.0.1-192.168.0.9
+      gateway: 10.0.8.1
+      reserved_ip_ranges: 10.0.8.1-10.0.8.9
       availability_zone_names:
       - "null"
   - name: pas
     subnets:
     - iaas_identifier: alekssaul-pcf-virtual-network/alekssaul-pcf-ert-subnet
-      cidr: 192.168.4.0/22
+      cidr: 10.0.0.0/22
       dns: 168.63.129.16,8.8.8.8
-      gateway: 192.168.4.1
-      reserved_ip_ranges: 192.168.4.1-192.168.4.9
+      gateway: 10.0.0.1
+      reserved_ip_ranges: 10.0.0.1-10.0.0.9
       availability_zone_names:
       - "null"
   - name: services
     subnets:
     - iaas_identifier: alekssaul-pcf-virtual-network/alekssaul-pcf-services-01-subnet
-      cidr: 192.168.8.0/22
+      cidr: 10.0.4.0/22
       dns: 168.63.129.16,8.8.8.8
       gateway: 192.168.8.1
-      reserved_ip_ranges: 192.168.8.1-192.168.8.9
-      availability_zone_names:
-      - "null"
-  - name: dynamic-services
-    subnets:
-    - iaas_identifier: alekssaul-pcf-virtual-network/alekssaul-pcf-dynamic-services-subnet
-      cidr: 192.168.12.0/22
-      dns: 168.63.129.16,8.8.8.8
-      gateway: 192.168.12.1
-      reserved_ip_ranges: 192.168.12.1-192.168.12.9
+      reserved_ip_ranges: 10.0.4.1-10.0.4.9
       availability_zone_names:
       - "null"
 properties-configuration:
@@ -60,7 +51,7 @@ properties-configuration:
     keep_unreachable_vms: false
     local_blobstore_options:
       tls_enabled: true
-    ntp_servers_string: 0.pool.ntp.org
+    ntp_servers_string: time.google.com
     post_deploy_enabled: false
     resurrector_enabled: true
     retry_bosh_deploys: true

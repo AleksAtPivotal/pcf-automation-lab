@@ -132,17 +132,17 @@ jobs:
       image: platform-automation-image
       file: platform-automation-tasks/tasks/configure-director.yml
       input_mapping:
-        config: pcf-automation
-        env: pcf-automation
-        vars: interpolated-files
+        config: configuration
+        env: configuration
+        vars: configuration
       params:
-        VARS_FILES: vars/((foundation))/vars/director-vars.yml
+        VARS_FILES: vars/((foundation))/vars/director/manual.yml vars/((foundation))/vars/director/secrets.yml
         ENV_FILE: ((foundation))/env/env.yml
         DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
     - task: apply-director-changes
       image: platform-automation-image
       file: platform-automation-tasks/tasks/apply-director-changes.yml
       input_mapping:
-        env: pcf-automation
+        env: configuration
       params:
         ENV_FILE: ((foundation))/env/env.yml
