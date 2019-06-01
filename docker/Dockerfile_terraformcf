@@ -1,0 +1,14 @@
+FROM cloudfoundry/cflinuxfs3:latest
+LABEL maintainer="asaul@pivotal.io"
+LABEL imageurl="alekssaul/terraforming-cf"
+RUN cd $HOME && \
+    wget -q https://releases.hashicorp.com/terraform/0.11.14/terraform_0.11.14_linux_amd64.zip && \
+    unzip terraform_0.11.14_linux_amd64.zip && \
+    mv terraform /usr/local/bin && \
+    rm terraform_0.11.14_linux_amd64.zip && \
+    wget -q https://github.com/cloudfoundry-community/terraform-provider-cf/releases/download/0.9.9/terraform-provider-cf_linux_amd64 && \
+    mkdir -p /home/vcap/.terraform.d/plugins/linux_amd64 && \
+    mv terraform-provider-cf_linux_amd64 /home/vcap/.terraform.d/plugins/linux_amd64/terraform-provider-cloudfoundry && \
+    chmod +x /home/vcap/.terraform.d/plugins/linux_amd64/terraform-provider-cloudfoundry && \
+    chown -R vcap:vcap /home/vcap/.terraform.d
+USER vcap

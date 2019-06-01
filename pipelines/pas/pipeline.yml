@@ -1,4 +1,7 @@
 groups:
+- name: pks
+  jobs:
+  - deploy-opsman
 - name: full-pcf
   jobs:
   - deploy-opsman
@@ -43,7 +46,6 @@ resources:
     container: "pas"
     regexp: cf-(.*).pivotal
     sort_by: semver
-
 
 # configurations
 - name: configuration

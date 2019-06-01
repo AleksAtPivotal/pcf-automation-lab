@@ -1,7 +1,7 @@
 azure_location: "East US"
 azure_container: opsmanagerimage
 azure_network_security_group: azure_alekssaul_com-ops-manager-security-group
-azure_storage_account: ggj2nnl7uaju2o3l0hev   # account name of container
+azure_storage_account: rqyjmtm4b3w36055rd8k   # account name of container
 azure_ssh_public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxtJE60PCpsobqdRY/dnR3+AobBPyp9fGCzyLOi57r893KyaU51EKZaPMfifohX2EtJU1mMkfzitL2PfFVfOURy+lO6oIq+TAH7nS4/poMFTXjaBtmSB4gtzxOKIZO7MzzN+oZbAfZlU41R9AVE4sTdlVkN1crWuu5kRoBoz627DCaZFsZbixvQ5EmHhAlmVQdG8i3/jLoEXo/fRAj6BfoHf2rCmoydg9TbGflqEhPyaBBIA2+9BdTDoniKn417HF5WdWOpenHeMLohB4VrYcFSWksRiPo7z9+XXzQfuXk86IiMNw/dFaNlveGg0QwKaRM9JOu8KqQ/CdZ0kREqziL
 azure_vm_name: OpsManager-vm
 azure_boot_disk_size: 200
