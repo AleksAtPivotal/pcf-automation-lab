@@ -1,1 +1,4 @@
 secrets.yml filter=git-crypt diff=git-crypt
+terraform.tfvars filter=git-crypt diff=git-crypt
+terraform.tfstate filter=git-crypt diff=git-crypt
+terraform.tfstate.backup filter=git-crypt diff=git-crypt
